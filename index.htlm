@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Path of Progress</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        .stat-card {
+            transition: transform 0.2s;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        .xp-bar {
+            transition: width 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <nav class="bg-gray-800 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-green-400">Path of Progress</h1>
+            <div class="flex space-x-4">
+                <button id="save-btn" class="px-4 py-2 bg-green-500 rounded hover:bg-green-600">Sauvegarder</button>
+                <button id="reset-btn" class="px-4 py-2 bg-red-500 rounded hover:bg-red-600">Réinitialiser</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto p-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Les cartes de stats seront générées ici -->
+        </div>
+
+        <div class="mt-8">
+            <h2 class="text-xl font-bold mb-4">Quêtes Quotidiennes</h2>
+            <div id="quests" class="space-y-2">
+                <!-- Les quêtes seront générées ici -->
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const stats = {
+            intelligence: {
+                name: 'Intelligence',
+                color: 'blue',
+                value: 10,
+                xp: 0,
+                icon: '🧠'
+            },
+            sante: {
+                name: 'Santé',
+                color: 'red',
+                value: 10,
+                xp: 0,
+                icon: '❤️'
+            },
+            connaissance: {
+                name: 'Connaissance',
+                color: 'purple',
+                value: 10,
+                xp: 0,
+                icon: '📚'
+            },
+            force: {
+                name: 'Force',
+                color: 'green',
+                value: 10,
+                xp: 0,
+                icon: '💪'
+            },
+            charisme: {
+                name: 'Charisme',
+                color: 'yellow',
+                value: 10,
+                xp: 0,
+                icon: '🗣️'
+            },
+            richesse: {
+                name: 'Richesse',
+                color: 'amber',
+                value: 10,
+                xp: 0,
+                icon: '💰'
+            }
+        };
+
+        const dailyQuests = [
+            {
+                name: 'Lecture quotidienne',
+                xp: 3,
+                stat: 'connaissance',
+                description: 'Lire pendant 30 minutes'
+            },
+            {
+                name: 'Exercice physique',
+                xp: 5,
+                stat: 'force',
+                description: 'Faire 30 minutes de sport'
+            },
+            {
+                name: 'Méditation',
+                xp: 2,
+                stat: 'intelligence',
+                description: 'Méditer pendant 10 minutes'
+            }
+        ];
+
+        function createStatCard(statKey, stat) {
+            const level = Math.floor(stat.value / 10) + 1;
+            const xpNeeded = level * 100;
+            const xpPercentage = (stat.xp / xpNeeded) * 100;
+
+            return `
+                <div class="stat-card bg-gray-800 rounded-lg p-4 shadow-lg">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-lg font-bold">${stat.icon} ${stat.name}</h3>
+                        <span class="text-${stat.color}-400">Niveau ${level}</span>
+                    </div>
+                    <div class="mb-2">
+                        <div class="w-full bg-gray-700 rounded-full h-2">
+                            <div class="xp-bar bg-${stat.color}-500 rounded-full h-2" style="width: ${xpPercentage}%"></div>
+                        </div>
+                    </div>
+                    <div class="text-sm text-gray-400">
+                        XP: ${stat.xp}/${xpNeeded}
+                    </div>
+                    <button onclick="addXP('${statKey}', 1)" class="mt-2 px-3 py-1 bg-${stat.color}-500 rounded hover:bg-${stat.color}-600">
+                        +1 XP
+                    </button>
+                </div>
+            `;
+        }
+
+        function renderStats() {
+            const statsContainer = document.querySelector('.grid');
+            statsContainer.innerHTML = Object.entries(stats)
+                .map(([key, stat]) => createStatCard(key, stat))
+                .join('');
+        }
+
+        function renderQuests() {
+            const questsContainer = document.getElementById('quests');
+            questsContainer.innerHTML = dailyQuests.map(quest => `
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <h3 class="font-bold">${quest.name}</h3>
+                    <p class="text-gray-400">${quest.description}</p>
+                    <p class="text-sm text-green-400">+${quest.xp} XP ${stats[quest.stat].icon}</p>
+                    <button onclick="completeQuest(${dailyQuests.indexOf(quest)})" 
+                            class="mt-2 px-3 py-1 bg-green-500 rounded hover:bg-green-600">
+                        Compléter
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function addXP(statKey, amount) {
+            const stat = stats[statKey];
+            stat.xp += amount;
+            const level = Math.floor(stat.value / 10) + 1;
+            const xpNeeded = level * 100;
+            
+            if (stat.xp >= xpNeeded) {
+                stat.value += 1;
+                stat.xp = 0;
+                alert(`Félicitations ! Votre ${stat.name} a augmenté au niveau ${Math.floor(stat.value / 10) + 1} !`);
+            }
+            
+            saveProgress();
+            renderStats();
+        }
+
+        function completeQuest(questIndex) {
+            const quest = dailyQuests[questIndex];
+            addXP(quest.stat, quest.xp);
+        }
+
+        function saveProgress() {
+            localStorage.setItem('pathOfProgress', JSON.stringify(stats));
+        }
+
+        function loadProgress() {
+            const savedStats = localStorage.getItem('pathOfProgress');
+            if (savedStats) {
+                Object.assign(stats, JSON.parse(savedStats));
+            }
+        }
+
+        document.getElementById('save-btn').addEventListener('click', saveProgress);
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            if (confirm('Êtes-vous sûr de vouloir réinitialiser votre progression ?')) {
+                localStorage.removeItem('pathOfProgress');
+                location.reload();
+            }
+        });
+
+        // Initialisation
+        loadProgress();
+        renderStats();
+        renderQuests();
+    </script>
+</body>
+</html>
