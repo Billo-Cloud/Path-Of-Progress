@@ -15,6 +15,9 @@
         .xp-bar {
             transition: width 0.3s ease-in-out;
         }
+        .completed-quest {
+            border: 2px solid #34D399; /* Couleur de surbrillance pour les quêtes terminées */
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-white">
@@ -43,69 +46,18 @@
 
     <script>
         const stats = {
-            intelligence: {
-                name: 'Intelligence',
-                color: 'blue',
-                value: 10,
-                xp: 0,
-                icon: '🧠'
-            },
-            sante: {
-                name: 'Santé',
-                color: 'red',
-                value: 10,
-                xp: 0,
-                icon: '❤️'
-            },
-            connaissance: {
-                name: 'Connaissance',
-                color: 'purple',
-                value: 10,
-                xp: 0,
-                icon: '📚'
-            },
-            force: {
-                name: 'Force',
-                color: 'green',
-                value: 10,
-                xp: 0,
-                icon: '💪'
-            },
-            charisme: {
-                name: 'Charisme',
-                color: 'yellow',
-                value: 10,
-                xp: 0,
-                icon: '🗣️'
-            },
-            richesse: {
-                name: 'Richesse',
-                color: 'amber',
-                value: 10,
-                xp: 0,
-                icon: '💰'
-            }
+            intelligence: { name: 'Intelligence', color: 'blue', value: 10, xp: 0, icon: '🧠' },
+            sante: { name: 'Santé', color: 'red', value: 10, xp: 0, icon: '❤️' },
+            connaissance: { name: 'Connaissance', color: 'purple', value: 10, xp: 0, icon: '📚' },
+            force: { name: 'Force', color: 'green', value: 10, xp: 0, icon: '💪' },
+            charisme: { name: 'Charisme', color: 'yellow', value: 10, xp: 0, icon: '🗣️' },
+            richesse: { name: 'Richesse', color: 'amber', value: 10, xp: 0, icon: '💰' }
         };
 
         const dailyQuests = [
-            {
-                name: 'Lecture quotidienne',
-                xp: 3,
-                stat: 'connaissance',
-                description: 'Lire pendant 30 minutes'
-            },
-            {
-                name: 'Exercice physique',
-                xp: 5,
-                stat: 'force',
-                description: 'Faire 30 minutes de sport'
-            },
-            {
-                name: 'Méditation',
-                xp: 2,
-                stat: 'intelligence',
-                description: 'Méditer pendant 10 minutes'
-            }
+            { name: 'Lecture quotidienne', xp: 3, stat: 'connaissance', description: 'Lire pendant 30 minutes' },
+            { name: 'Exercice physique', xp: 5, stat: 'force', description: 'Faire 30 minutes de sport' },
+            { name: 'Méditation', xp: 2, stat: 'intelligence', description: 'Méditer pendant 10 minutes' }
         ];
 
         function createStatCard(statKey, stat) {
@@ -124,34 +76,25 @@
                             <div class="xp-bar bg-${stat.color}-500 rounded-full h-2" style="width: ${xpPercentage}%"></div>
                         </div>
                     </div>
-                    <div class="text-sm text-gray-400">
-                        XP: ${stat.xp}/${xpNeeded}
-                    </div>
-                    <button onclick="addXP('${statKey}', 1)" class="mt-2 px-3 py-1 bg-${stat.color}-500 rounded hover:bg-${stat.color}-600">
-                        +1 XP
-                    </button>
+                    <div class="text-sm text-gray-400">XP: ${stat.xp}/${xpNeeded}</div>
+                    <button onclick="addXP('${statKey}', 1)" class="mt-2 px-3 py-1 bg-${stat.color}-500 rounded hover:bg-${stat.color}-600">+1 XP</button>
                 </div>
             `;
         }
 
         function renderStats() {
             const statsContainer = document.querySelector('.grid');
-            statsContainer.innerHTML = Object.entries(stats)
-                .map(([key, stat]) => createStatCard(key, stat))
-                .join('');
+            statsContainer.innerHTML = Object.entries(stats).map(([key, stat]) => createStatCard(key, stat)).join('');
         }
 
         function renderQuests() {
             const questsContainer = document.getElementById('quests');
-            questsContainer.innerHTML = dailyQuests.map(quest => `
-                <div class="bg-gray-800 p-4 rounded-lg">
+            questsContainer.innerHTML = dailyQuests.map((quest, index) => `
+                <div id="quest-${index}" class="bg-gray-800 p-4 rounded-lg">
                     <h3 class="font-bold">${quest.name}</h3>
                     <p class="text-gray-400">${quest.description}</p>
                     <p class="text-sm text-green-400">+${quest.xp} XP ${stats[quest.stat].icon}</p>
-                    <button onclick="completeQuest(${dailyQuests.indexOf(quest)})" 
-                            class="mt-2 px-3 py-1 bg-green-500 rounded hover:bg-green-600">
-                        Compléter
-                    </button>
+                    <button onclick="completeQuest(${index})" class="mt-2 px-3 py-1 bg-green-500 rounded hover:bg-green-600">Compléter</button>
                 </div>
             `).join('');
         }
@@ -161,13 +104,13 @@
             stat.xp += amount;
             const level = Math.floor(stat.value / 10) + 1;
             const xpNeeded = level * 100;
-            
+
             if (stat.xp >= xpNeeded) {
                 stat.value += 1;
                 stat.xp = 0;
                 alert(`Félicitations ! Votre ${stat.name} a augmenté au niveau ${Math.floor(stat.value / 10) + 1} !`);
             }
-            
+
             saveProgress();
             renderStats();
         }
@@ -175,6 +118,10 @@
         function completeQuest(questIndex) {
             const quest = dailyQuests[questIndex];
             addXP(quest.stat, quest.xp);
+
+            const questElement = document.getElementById(`quest-${questIndex}`);
+            questElement.classList.add("completed-quest");
+            setTimeout(() => questElement.classList.remove("completed-quest"), 1000);
         }
 
         function saveProgress() {
@@ -196,10 +143,10 @@
             }
         });
 
-        // Initialisation
         loadProgress();
         renderStats();
         renderQuests();
     </script>
 </body>
 </html>
+
