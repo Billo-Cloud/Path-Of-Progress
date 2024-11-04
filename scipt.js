@@ -12,6 +12,6 @@ function completeQuest() {
 
     // Affiche un message lorsque le joueur atteint 100 XP
     if (xp >= 100) {
-        alert("Félicitations ! Tu as atteint 100 XP !");
+        alert("Félicitations ! Tu as atteint 1000 XP !");
     }
 }
