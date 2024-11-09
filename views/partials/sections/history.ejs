@@ -1,0 +1,133 @@
+<!-- views/partials/sections/history.ejs -->
+<section id="quest-history" class="section tab-content">
+    <div class="history-container">
+        <div class="history-header">
+            <h2 class="section-title">Historique des Quêtes</h2>
+            
+            <!-- Filtres temporels -->
+            <div class="time-filters">
+                <button class="time-filter active" data-period="day">Jour</button>
+                <button class="time-filter" data-period="week">Semaine</button>
+                <button class="time-filter" data-period="month">Mois</button>
+                <button class="time-filter" data-period="year">Année</button>
+            </div>
+
+            <!-- Options d'export -->
+            <div class="export-options">
+                <button class="export-btn" onclick="exportData('pdf')">
+                    <i class="export-icon">📄</i> PDF
+                </button>
+                <button class="export-btn" onclick="exportData('csv')">
+                    <i class="export-icon">📊</i> CSV
+                </button>
+            </div>
+        </div>
+
+        <!-- Résumé des statistiques -->
+        <div class="stats-overview">
+            <div class="stat-card">
+                <div class="stat-value"><%= user.questsCompleted || 0 %></div>
+                <div class="stat-label">Quêtes Totales</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value"><%= user.totalXP || 0 %></div>
+                <div class="stat-label">XP Gagnés</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value"><%= user.currentStreak || 0 %></div>
+                <div class="stat-label">Jours Consécutifs</div>
+                <div class="streak-flame">🔥</div>
+            </div>
+        </div>
+
+        <!-- Liste détaillée -->
+        <div class="detailed-history">
+            <h3>Journal Détaillé</h3>
+            <div class="history-filters">
+                <input type="text" placeholder="Rechercher..." class="search-input">
+                <select class="filter-select">
+                    <option value="">Toutes les stats</option>
+                    <% Object.entries(stats).forEach(([key, stat]) => { %>
+                        <option value="<%= key %>"><%= stat.label %></option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <div class="history-list">
+                <% 
+                // Récupérer toutes les quêtes complétées
+                const completedQuests = user.dailyQuests.filter(q => q.completed)
+                    .sort((a, b) => new Date(b.lastCompleted) - new Date(a.lastCompleted));
+                %>
+
+                <% if (completedQuests && completedQuests.length > 0) { %>
+                    <% 
+                    // Grouper les quêtes par date
+                    const groupedQuests = {};
+                    completedQuests.forEach(quest => {
+                        const date = new Date(quest.lastCompleted).toLocaleDateString();
+                        if (!groupedQuests[date]) groupedQuests[date] = [];
+                        groupedQuests[date].push(quest);
+                    });
+                    %>
+
+                    <% Object.entries(groupedQuests).forEach(([date, quests]) => { %>
+                        <div class="history-day">
+                            <div class="day-header">
+                                <h4><%= date %></h4>
+                                <span class="day-total">
+                                    <%= quests.length %> quête<%= quests.length > 1 ? 's' : '' %>
+                                </span>
+                            </div>
+
+                            <div class="day-quests">
+                                <% quests.forEach(quest => { %>
+                                    <div class="history-entry" 
+                                         data-stat="<%= quest.stat %>">
+                                        <div class="entry-date">
+                                            <%= new Date(quest.lastCompleted).toLocaleTimeString('fr-FR', { 
+                                                hour: '2-digit', 
+                                                minute: '2-digit' 
+                                            }) %>
+                                        </div>
+                                        <div class="entry-content">
+                                            <div class="entry-icon">
+                                                <%= stats[quest.stat].emoji %>
+                                            </div>
+                                            <div class="entry-details">
+                                                <h4><%= quest.name %></h4>
+                                                <div class="entry-meta">
+                                                    <span class="entry-stat" style="color: <%= stats[quest.stat].color %>">
+                                                        <%= stats[quest.stat].label %>
+                                                    </span>
+                                                    <span class="entry-xp">+<%= quest.xpReward %> XP</span>
+                                                    <% if (quest.timer) { %>
+                                                        <span class="entry-time">
+                                                            ⏱️ <%= quest.timer %> min
+                                                        </span>
+                                                    <% } %>
+                                                </div>
+                                            </div>
+                                            <div class="entry-difficulty <%= quest.difficulty %>">
+                                                <%= quest.difficulty %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <% }) %>
+                            </div>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <div class="empty-state">
+                        <div class="empty-icon">📖</div>
+                        <h3>Aucun historique disponible</h3>
+                        <p>Complétez des quêtes pour voir votre progression ici !</p>
+                        <button onclick="switchTab('quests')" class="primary-button">
+                            Voir les quêtes
+                        </button>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</section>

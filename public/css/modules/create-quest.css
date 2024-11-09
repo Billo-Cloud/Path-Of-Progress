@@ -1,0 +1,251 @@
+/* /public/css/modules/create-quest.css */
+
+.create-quest-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Templates */
+.quest-templates {
+    margin-bottom: 3rem;
+}
+
+.templates-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.template-card {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.template-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.template-icon {
+    font-size: 2rem;
+}
+
+.template-info h4 {
+    margin: 0;
+    margin-bottom: 0.3rem;
+}
+
+.template-stat {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* Formulaire */
+.create-quest-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.input-with-suggestions {
+    position: relative;
+}
+
+.suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 0 0 4px 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    display: none;
+}
+
+.suggestion-item {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+.suggestion-item:hover {
+    background: #f5f5f5;
+}
+
+/* Sélecteur de difficulté */
+.difficulty-selector {
+    margin-top: 0.5rem;
+}
+
+.difficulty-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.difficulty-btn {
+    border: 2px solid #ddd;
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.difficulty-btn.selected {
+    border-color: #4CAF50;
+    background: #E8F5E9;
+}
+
+.btn-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.diff-label {
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+}
+
+.xp-preview {
+    color: #4CAF50;
+}
+
+.time-estimate {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 0.3rem;
+}
+
+/* Options avancées */
+.advanced-options {
+    margin: 2rem 0;
+}
+
+.toggle-advanced {
+    background: none;
+    border: none;
+    color: #2196F3;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.advanced-content {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+/* Prévisualisation */
+.quest-preview {
+    margin: 2rem 0;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.preview-card {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+/* Boutons d'action */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: #4CAF50;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #388E3C;
+}
+
+.btn-secondary {
+    background: #9E9E9E;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #757575;
+}
+/* Dans create-quest.css */
+
+.preview-section {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-top: 2rem;
+}
+
+.preview-section h4 {
+    margin-bottom: 1rem;
+    color: #666;
+}
+
+.quest-preview .quest-card {
+    margin-bottom: 0;
+}
+
+.quest-schedule {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.schedule-date, .schedule-time {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.schedule-date::before {
+    content: "📅";
+}
+
+/* Styles pour les inputs de date et créneaux */
+input[type="date"], select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    background: white;
+}

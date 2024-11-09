@@ -1,0 +1,22 @@
+{
+  "name": "mon_projet_gamifie",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "express-fileupload": "^1.5.1",
+    "mongoose": "^8.8.0",
+    "nodemon": "^3.1.7"
+  },
+  "description": "Application de gamification de la vie quotidienne"
+}

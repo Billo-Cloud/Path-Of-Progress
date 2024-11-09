@@ -1,0 +1,97 @@
+<section id="profile" class="section tab-content" style="display: none;">
+    <div class="profile-container">
+        <!-- Section Avatar -->
+        <div class="avatar-section">
+            <h2 class="section-title">Mon Profil</h2>
+            <div class="avatar-wrapper">
+                <img src="<%= user.avatarUrl || '/images/default-avatar.png' %>" 
+                     alt="Photo de profil" 
+                     class="avatar-preview" 
+                     id="avatarPreview">
+                <label for="avatarInput" class="avatar-upload-btn">
+                    <i data-lucide="camera"></i>
+                </label>
+                <input type="file" 
+                       id="avatarInput" 
+                       class="avatar-input" 
+                       accept="image/*"
+                       onchange="handleAvatarUpload(this)">
+            </div>
+            
+            <h3 class="section-title">Personnalisation</h3>
+            <div class="emoji-grid">
+                <% const avatarEmojis = ['👤', '🦸‍♂️', '🧙‍♂️', '🦹‍♀️', '🧝‍♂️', '🧚‍♀️', '🦾', '🎮', '🏃‍♂️', '🧘‍♂️']; %>
+                <% avatarEmojis.forEach((emoji, index) => { %>
+                    <button class="emoji-btn <%= user.avatarEmoji === index ? 'selected' : '' %>"
+                            onclick="setAvatarEmoji(<%= index %>)">
+                        <%= emoji %>
+                    </button>
+                <% }); %>
+            </div>
+        </div>
+
+        <!-- Section Stats Globales -->
+        <div class="stats-section">
+            <h2 class="section-title">Vue d'ensemble</h2>
+            <div class="profile-stats">
+                <div class="stat-highlight">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-value"><%= user.questsCompleted %></div>
+                    <div class="stat-label">Quêtes Complétées</div>
+                </div>
+
+                <div class="stat-highlight">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-value">
+                        <%= Object.values(user.stats).reduce((sum, stat) => sum + stat.level, 0) %>
+                    </div>
+                    <div class="stat-label">Niveau Total</div>
+                </div>
+
+                <div class="stat-highlight">
+                    <div class="stat-icon">✨</div>
+                    <div class="stat-value"><%= user.totalXP %></div>
+                    <div class="stat-label">XP Totale</div>
+                </div>
+
+                <div class="stat-highlight">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-value"><%= user.badges.length %></div>
+                    <div class="stat-label">Badges Débloqués</div>
+                </div>
+            </div>
+
+        <!-- Badges & Récompenses -->
+		<div class="badges-section">
+			<h2 class="section-title">Succès Débloqués</h2>
+			<div class="badges-grid">
+				<% const badges = [
+					{ id: 'beginner', name: 'Débutant', icon: '🌱', description: 'Commencez votre voyage', color: '#4CAF50' },
+					{ id: 'warrior', name: 'Guerrier', icon: '⚔️', description: 'Force niveau 5', color: '#FF5722' },
+					{ id: 'scholar', name: 'Érudit', icon: '📚', description: 'Connaissance niveau 5', color: '#2196F3' },
+					{ id: 'athlete', name: 'Athlète', icon: '🏃', description: 'Santé niveau 5', color: '#FF9800' },
+					{ id: 'artist', name: 'Artiste', icon: '🎨', description: 'Créativité niveau 5', color: '#E91E63' },
+					{ id: 'monk', name: 'Moine', icon: '🧘', description: 'Discipline niveau 5', color: '#9C27B0' },
+					{ id: 'leader', name: 'Leader', icon: '👥', description: 'Relations niveau 5', color: '#3F51B5' },
+					{ id: 'merchant', name: 'Marchand', icon: '💰', description: 'Richesse niveau 5', color: '#009688' }
+				] %>
+        
+				<% badges.forEach(badge => { 
+					const isUnlocked = user.badges.find(b => b.id === badge.id);
+				%>
+					<div class="badge-item <%= isUnlocked ? 'unlocked' : 'locked' %>"
+						onclick="showBadgeDetails('<%= badge.id %>')"
+						style="--badge-color: <%= badge.color %>">
+						<div class="badge-icon">
+							<%= badge.icon %>
+						</div>
+						<div class="badge-name"><%= badge.name %></div>
+						<div class="badge-description">
+							<%= isUnlocked ? 'Débloqué !' : badge.description %>
+						</div>
+					</div>
+				<% }); %>
+			</div>
+        </div>
+    </div>
+</section>

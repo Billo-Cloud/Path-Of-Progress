@@ -1,0 +1,28 @@
+:root {
+    /* Couleurs */
+    --primary-color: #4CAF50;
+    --primary-dark: #45a049;
+    --text-primary: #2c3e50;
+    --text-secondary: #666;
+    --background: #f5f7fa;
+    
+    /* Ombres */
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --hover-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    
+    /* Transitions */
+    --transition-speed: 0.3s;
+    --transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Espacements */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    
+    /* Bordures */
+    --border-radius-sm: 8px;
+    --border-radius-md: 15px;
+    --border-radius-lg: 20px;
+    --border-radius-full: 9999px;
+}

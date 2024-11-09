@@ -1,0 +1,124 @@
+<!-- views/partials/sections/quests.ejs -->
+<section id="quests" class="section tab-content">
+    <div class="quests-container">
+        <h2 class="section-title">Quêtes Quotidiennes</h2>
+
+        <!-- Filtres -->
+        <div class="quest-filters">
+            <div class="search-bar">
+                <input type="text" id="quest-search" placeholder="Rechercher une quête...">
+            </div>
+            
+            <div class="filter-group">
+                <select id="stat-filter">
+                    <option value="">Toutes les statistiques</option>
+                    <% Object.entries(stats).forEach(([key, stat]) => { %>
+                        <option value="<%= key %>"><%= stat.emoji %> <%= stat.label %></option>
+                    <% }) %>
+                </select>
+
+                <select id="difficulty-filter">
+                    <option value="">Toutes les difficultés</option>
+                    <option value="facile">Facile</option>
+                    <option value="moyen">Moyen</option>
+                    <option value="difficile">Difficile</option>
+                </select>
+
+                <select id="status-filter">
+                    <option value="">Tous les statuts</option>
+                    <option value="pending">À faire</option>
+                    <option value="completed">Complétées</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Timeline et quêtes -->
+        <div class="quests-timeline-container">
+            <!-- Timeline -->
+            <div class="timeline">
+                <div class="timeline-line"></div>
+                <% let totalQuests = user.dailyQuests.length;
+                   let completedQuests = user.dailyQuests.filter(q => q.completed).length; %>
+                <div class="timeline-progress" style="height: <%= (completedQuests/totalQuests) * 100 %>%"></div>
+                
+                <div class="timeline-markers">
+                    <div class="time-marker morning">🌅 Matin</div>
+                    <div class="time-marker afternoon">☀️ Après-midi</div>
+                    <div class="time-marker evening">🌙 Soir</div>
+                </div>
+            </div>
+
+            <!-- Liste des quêtes -->
+            <div class="quests-list">
+				<% if (user.dailyQuests && user.dailyQuests.length > 0) { %>
+					<% const activeQuests = user.dailyQuests.filter(quest => !quest.completed); %>
+					<% if (activeQuests.length > 0) { %>
+						<% activeQuests.forEach(quest => { %>
+							<div class="quest-card" 
+								data-id="<%= quest._id %>"
+								data-stat="<%= quest.stat %>"
+								data-difficulty="<%= quest.difficulty %>">
+                            
+                            <div class="quest-time-indicator"></div>
+                            
+                            <div class="quest-content">
+                                <div class="quest-header">
+                                    <span class="quest-emoji"><%= stats[quest.stat].emoji %></span>
+                                    <h3 class="quest-title"><%= quest.name %></h3>
+                                    <span class="quest-difficulty <%= quest.difficulty %>">
+                                        <%= quest.difficulty ? quest.difficulty.charAt(0).toUpperCase() + quest.difficulty.slice(1) : 'Difficulté non définie' %>
+                                    </span>
+                                </div>
+
+                                <div class="quest-info">
+                                    <span class="quest-type" style="color: <%= stats[quest.stat].color %>">
+                                        <%= stats[quest.stat].label %>
+                                    </span>
+                                    <span class="quest-reward">+<%= quest.xpReward %> XP</span>
+                                    
+                                    <% if (quest.streak > 1) { %>
+                                        <span class="quest-streak">
+                                            🔥 <%= quest.streak %> jours
+                                        </span>
+                                    <% } %>
+                                </div>
+
+                                <% if (quest.timer) { %>
+                                    <div class="quest-timer" data-duration="<%= quest.timer %>">
+                                        <span class="timer-icon">⏱️</span>
+                                        <span class="timer-display">00:00</span>
+                                    </div>
+                                <% } %>
+
+                                <div class="quest-actions">
+                                    <button class="complete-button <%= quest.completed ? 'completed' : '' %>"
+                                            <%= quest.completed ? 'disabled' : '' %>
+                                            onclick="completeQuest(this)">
+                                        <%= quest.completed ? '✓ Complété' : 'Compléter' %>
+                                    </button>
+                                    
+                                    <% if (quest.timer) { %>
+                                        <button class="timer-button" onclick="startQuestTimer(this)">
+                                            Démarrer
+                                        </button>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <div class="empty-state">
+                        <div class="empty-icon">🎯</div>
+                        <h3>Aucune quête disponible</h3>
+                        <p> Créez une nouvelle quête pour continuer votre progression !</p>
+                        <button onclick="switchTab('create-quest')" class="create-quest-btn">
+                            Créer une quête
+                        </button>
+                    </div>
+                <% } %>
+			<% } else { %>
+				<!-- État vide existant... -->
+			<% } %>
+		</div>	
+    </div>
+</section>

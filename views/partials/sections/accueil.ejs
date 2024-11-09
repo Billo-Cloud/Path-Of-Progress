@@ -1,0 +1,119 @@
+<section id="home" class="section tab-content">
+    <div class="welcome-container">
+        <h1 class="welcome-header">Bienvenue dans Path of Progress! 🎮</h1>
+        <p>Transforme ta vie en une aventure passionnante et suis ta progression comme dans un jeu vidéo.</p>
+        
+        <!-- Stats rapides -->
+        <div class="quick-stats">
+            <div class="stat-item">
+                <div class="stat-value"><%= user.totalXP || 0 %></div>
+                <div class="stat-label">XP Total</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value"><%= user.questsCompleted || 0 %></div>
+                <div class="stat-label">Quêtes complétées</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value streak-counter">
+                    <%= user.currentStreak || 0 %>
+                    <span class="streak-flame">🔥</span>
+                </div>
+                <div class="stat-label">Jours consécutifs</div>
+            </div>
+        </div>
+
+        <!-- Cartes de fonctionnalités -->
+        <div class="feature-grid">
+            <div class="feature-card" onclick="switchTab('stats')">
+                <div class="feature-icon">📊</div>
+                <div class="feature-content">
+                    <h3>Suivez vos Statistiques</h3>
+                    <p>Visualisez votre progression dans 8 domaines clés de votre vie.</p>
+                    <div class="feature-progress">
+                        <% const totalLevel = Object.values(user.stats).reduce((sum, stat) => sum + stat.level, 0) %>
+                        <div class="level-indicator">Niveau total: <%= totalLevel %></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="feature-card" onclick="switchTab('quests')">
+                <div class="feature-icon">✅</div>
+                <div class="feature-content">
+                    <h3>Complétez des Quêtes</h3>
+                    <p>Accomplissez des objectifs quotidiens pour gagner de l'expérience.</p>
+                    <div class="quest-progress">
+                        <% const completedToday = (user.dailyQuests || []).filter(q => q.completed).length %>
+                        <% const totalQuests = (user.dailyQuests || []).length %>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: <%= (completedToday/totalQuests) * 100 %>%"></div>
+                        </div>
+                        <span><%= completedToday %>/<%= totalQuests %> aujourd'hui</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="feature-card" onclick="switchTab('progress-chart')">
+                <div class="feature-icon">📈</div>
+                <div class="feature-content">
+                    <h3>Progressez</h3>
+                    <p>Montez de niveau et devenez la meilleure version de vous-même.</p>
+                    <div class="stats-preview">
+                        <% Object.entries(stats).slice(0, 4).forEach(([key, stat]) => { %>
+                            <div class="mini-stat">
+                                <span class="stat-emoji"><%= stat.emoji %></span>
+                                <span class="stat-level">Niv. <%= user.stats[key].level %></span>
+                            </div>
+                        <% }) %>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prochains objectifs -->
+        <% if (user.nextMilestones && user.nextMilestones.length > 0) { %>
+            <div class="next-goals">
+                <h3>Prochains objectifs</h3>
+                <div class="goals-list">
+                    <% user.nextMilestones.forEach(milestone => { %>
+                        <div class="goal-item">
+                            <div class="goal-icon"><%= milestone.icon %></div>
+                            <div class="goal-info">
+                                <div class="goal-name"><%= milestone.name %></div>
+                                <div class="goal-progress">
+                                    <div class="progress-bar">
+                                        <div class="progress" style="width: <%= milestone.progress %>%"></div>
+                                    </div>
+                                    <span><%= milestone.progress %>%</span>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            </div>
+        <% } else { %>
+            <!-- Objectifs par défaut basés sur les statistiques -->
+            <div class="next-goals">
+                <h3>Prochains objectifs</h3>
+                <div class="goals-list">
+                    <% Object.entries(user.stats).forEach(([key, stat]) => { %>
+                        <% if (stat.level < 5) { %>
+                            <div class="goal-item">
+                                <div class="goal-icon"><%= stats[key].emoji %></div>
+                                <div class="goal-info">
+                                    <div class="goal-name">Atteindre le niveau <%= stat.level + 1 %> en <%= stats[key].label %></div>
+                                    <div class="goal-progress">
+                                        <div class="progress-bar">
+                                            <% const progress = (stat.xp / ((stat.level + 1) * 10)) * 100 %>
+                                            <div class="progress" style="width: <%= progress %>%"></div>
+                                        </div>
+                                        <span><%= Math.round(progress) %>%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        <% } %>
+                    <% }) %>
+                </div>
+            </div>
+        <% } %>
+    </div>
+</section>

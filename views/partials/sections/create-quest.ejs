@@ -1,0 +1,136 @@
+<!-- views/partials/sections/create-quest.ejs -->
+<section id="create-quest" class="section tab-content">
+    <div class="create-quest-container">
+        <h2 class="section-title">Créer une nouvelle quête</h2>
+
+        <!-- Templates de quêtes -->
+        <div class="quest-templates">
+            <h3>Templates populaires</h3>
+            <div class="templates-grid">
+                <% const templates = [
+                    { name: 'Méditation', stat: 'discipline', difficulty: 'facile', timer: 10, icon: '🧘' },
+                    { name: 'Lecture', stat: 'connaissance', difficulty: 'moyen', icon: '📚' },
+                    { name: 'Exercice', stat: 'sante', difficulty: 'difficile', timer: 30, icon: '💪' },
+                    { name: 'Étude', stat: 'connaissance', difficulty: 'moyen', timer: 45, icon: '📝' },
+                    { name: 'Créativité', stat: 'creativite', difficulty: 'facile', icon: '🎨' },
+                    { name: 'Social', stat: 'relations', difficulty: 'moyen', icon: '👥' }
+                ] %>
+                
+                <% templates.forEach(template => { %>
+                    <div class="template-card" onclick="useTemplate('<%= JSON.stringify(template) %>')">
+                        <div class="template-icon"><%= template.icon %></div>
+                        <div class="template-info">
+                            <h4><%= template.name %></h4>
+                            <span class="template-stat">
+                                <%= stats[template.stat].emoji %> <%= stats[template.stat].label %>
+                            </span>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+
+        <!-- Dans create-quest.ejs -->
+		<form id="createQuestForm" class="create-quest-form">
+			<!-- Nom de la quête -->
+			<div class="form-group">
+				<label for="quest-name">Nom de la quête</label>
+				<input type="text" id="quest-name" name="quest-name" required placeholder="Ex: Méditer pendant 10 minutes" class="form-input">
+			</div>
+
+			<!-- Statistique -->
+			<div class="form-group">
+				<label for="quest-stat">Statistique</label>
+				<select id="quest-stat" name="stat" required class="form-select">
+					<option value="">Choisir une statistique</option>
+					<% Object.entries(stats).forEach(([key, stat]) => { %>
+						<option value="<%= key %>" data-icon="<%= stat.emoji %>">
+							<%= stat.emoji %> <%= stat.label %>
+						</option>
+					<% }) %>
+				</select>
+			</div>
+
+			<!-- Difficulté -->
+			<div class="form-group">
+				<label for="difficulty-group">Difficulté</label>
+				<input type="hidden" id="selected-difficulty" name="difficulty" value="facile">
+				<div class="difficulty-buttons" role="radiogroup" aria-labelledby="difficulty-label">
+					<button type="button" class="difficulty-btn" data-value="facile" role="radio">
+						<div class="diff-content">
+							<div class="diff-header">Facile</div>
+							<div class="diff-xp">5 XP</div>
+							<div class="diff-time">~15 min</div>
+						</div>
+					</button>
+					<button type="button" class="difficulty-btn" data-value="moyen" role="radio">
+						<div class="diff-content">
+							<div class="diff-header">Moyen</div>
+							<div class="diff-xp">10 XP</div>
+							<div class="diff-time">~30 min</div>
+						</div>
+					</button>
+					<button type="button" class="difficulty-btn" data-value="difficile" role="radio">
+						<div class="diff-content">
+							<div class="diff-header">Difficile</div>
+							<div class="diff-xp">15 XP</div>
+							<div class="diff-time">~1 heure</div>
+						</div>
+					</button>
+				</div>
+			</div>
+
+			<!-- Planification -->
+			<div class="form-group">
+				<label for="quest-date">Date</label>
+				<input type="date" id="quest-date" name="scheduled-date" required class="form-input" 
+					min="<%= new Date().toISOString().split('T')[0] %>"
+					max="<%= new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] %>">
+			</div>
+
+			<div class="form-group">
+				<label for="quest-time">Créneau horaire</label>
+				<select id="quest-time" name="time-slot" required class="form-select">
+					<option value="">Choisir un créneau</option>
+					<option value="morning">🌅 Matin </option>
+					<option value="afternoon">☀️ Après-midi </option>
+					<option value="evening">🌙 Soirée </option>
+				</select>
+			</div>
+
+			<!-- Prévisualisation -->
+			<div class="form-group preview-section">
+				<h4>Prévisualisation</h4>
+				<div class="quest-preview">
+					<div class="quest-card">
+						<div class="quest-content">
+							<div class="quest-header">
+								<span class="quest-emoji" id="preview-emoji"></span>
+								<h3 class="quest-title" id="preview-title">Nom de la quête</h3>
+								<span class="quest-difficulty" id="preview-difficulty"></span>
+							</div>
+							<div class="quest-info">
+								<span class="quest-type" id="preview-stat"></span>
+								<span class="quest-reward" id="preview-xp"></span>
+							</div>
+							<div class="quest-schedule">
+								<span class="schedule-date" id="preview-date"></span>
+								<span class="schedule-time" id="preview-time"></span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Boutons d'action -->
+			<div class="form-actions">
+				<button type="button" class="btn btn-secondary" onclick="switchTab('quests')">
+					Annuler
+				</button>
+				<button type="submit" class="btn btn-primary">
+					Créer la quête
+				</button>
+			</div>
+		</form>
+    </div>
+</section>

@@ -1,0 +1,51 @@
+/* Utilitaires de margin et padding */
+.m-0 { margin: 0 !important; }
+.mt-1 { margin-top: var(--spacing-xs) !important; }
+.mt-2 { margin-top: var(--spacing-sm) !important; }
+.mt-3 { margin-top: var(--spacing-md) !important; }
+.mt-4 { margin-top: var(--spacing-lg) !important; }
+
+.mb-1 { margin-bottom: var(--spacing-xs) !important; }
+.mb-2 { margin-bottom: var(--spacing-sm) !important; }
+.mb-3 { margin-bottom: var(--spacing-md) !important; }
+.mb-4 { margin-bottom: var(--spacing-lg) !important; }
+
+/* Utilitaires de flexbox */
+.d-flex { display: flex !important; }
+.flex-column { flex-direction: column !important; }
+.justify-center { justify-content: center !important; }
+.align-center { align-items: center !important; }
+.flex-grow-1 { flex-grow: 1 !important; }
+
+/* Utilitaires de texte */
+.text-center { text-align: center !important; }
+.text-primary { color: var(--primary-color) !important; }
+.text-secondary { color: var(--text-secondary) !important; }
+
+/* Utilitaires de bordure */
+.rounded { border-radius: var(--border-radius-sm) !important; }
+.rounded-lg { border-radius: var(--border-radius-lg) !important; }
+.rounded-full { border-radius: 50% !important; }
+
+/* Utilitaires d'ombre */
+.shadow-sm { box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important; }
+.shadow { box-shadow: var(--card-shadow) !important; }
+.shadow-lg { box-shadow: var(--hover-shadow) !important; }
+
+/* Utilitaires de visibilité */
+.hidden { display: none !important; }
+.visible { display: block !important; }
+
+/* Utilitaires de position */
+.relative { position: relative !important; }
+.absolute { position: absolute !important; }
+.fixed { position: fixed !important; }
+
+/* Utilitaires de taille */
+.w-100 { width: 100% !important; }
+.h-100 { height: 100% !important; }
+
+/* Utilitaires de grid */
+.grid-2 { grid-template-columns: repeat(2, 1fr) !important; }
+.grid-3 { grid-template-columns: repeat(3, 1fr) !important; }
+.grid-4 { grid-template-columns: repeat(4, 1fr) !important; }

@@ -1,0 +1,22 @@
+/* Variables globales */
+@import 'modules/variables.css';
+
+/* Styles de base */
+@import 'modules/base.css';
+
+/* Composants */
+@import 'modules/navigation.css';
+@import 'modules/cards.css';
+@import 'modules/stats.css';
+@import 'modules/quests.css';
+@import 'modules/profile.css';
+@import 'modules/charts.css';
+@import 'modules/notifications.css';
+@import 'modules/animations.css';
+@import 'modules/badges-quests.css';
+@import 'modules/create-quest.css';
+@import 'modules/home.css';
+@import 'modules/history.css';
+
+/* Utilitaires */
+@import 'modules/utilities.css';

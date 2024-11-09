@@ -1,0 +1,66 @@
+<%- include('partials/header') %>
+<%- include('partials/nav') %>
+
+<%
+// Configuration globale des stats
+const stats = {
+    creativite: { icon: 'palette', label: 'Créativité', color: '#FF6B6B', emoji: '🎨' },
+    sante: { icon: 'heart', label: 'Santé', color: '#4ECDC4', emoji: '❤️' },
+    connaissance: { icon: 'book-open', label: 'Connaissance', color: '#45B7D1', emoji: '📚' },
+    force: { icon: 'dumbbell', label: 'Force', color: '#96CEB4', emoji: '💪' },
+    discipline: { icon: 'target', label: 'Discipline', color: '#D4A373', emoji: '🎯' },
+    confiance: { icon: 'smile', label: 'Confiance en soi', color: '#FFD93D', emoji: '😊' },
+    relations: { icon: 'users', label: 'Relations sociales', color: '#FF8066', emoji: '👥' },
+    richesse: { icon: 'coins', label: 'Richesse', color: '#95D5B2', emoji: '💰' }
+};
+%>
+
+<main role="main">
+    <%- include('partials/sections/home') %>
+    <%- include('partials/sections/stats', { stats, user }) %>
+    <%- include('partials/sections/quests', { stats, user }) %>
+    <%- include('partials/sections/history', { stats, user }) %>
+    <%- include('partials/sections/profile', { stats, user }) %>
+    <%- include('partials/sections/charts', { stats, user }) %>
+	<%- include('partials/sections/create-quest', { stats, user}) %>
+	<%- include('partials/sections/accueil', { stats, user}) %>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+
+<script>
+    // Données globales
+    window.stats = <%- JSON.stringify(stats) %>;
+    window.user = <%- JSON.stringify(user) %>;
+    window.statsData = {
+        labels: <%- JSON.stringify(Object.values(stats).map(s => s.label)) %>,
+        values: <%- JSON.stringify(Object.keys(stats).map(key => user.stats[key].level)) %>
+    };
+</script>
+
+<script src="/js/modules/navigation.js" type="module"></script>
+<script src="/js/modules/stats.js" type="module"></script>
+<script src="/js/modules/quests.js" type="module"></script>
+<script src="/js/modules/profile.js" type="module"></script>
+<script src="/js/modules/history.js" type="module"></script>
+<script src="/js/modules/charts.js" type="module"></script>
+<script src="/js/modules/notifications.js" type="module"></script>
+<script src="/js/modules/create-quest.js" type="module"></script>
+<script src="/js/script.js" type="module"></script>
+
+<script>
+    // Données globales
+    window.stats = <%- JSON.stringify(stats) %>;
+    window.user = <%- JSON.stringify(user) %>;
+    window.statsData = {
+        labels: <%- JSON.stringify(Object.values(stats).map(s => s.label)) %>,
+        values: <%- JSON.stringify(Object.keys(stats).map(key => user.stats[key].level)) %>
+    };
+</script>
+
+<!-- Charger les modules -->
+<script src="/js/script.js"></script>
+
+
+</body>
+</html>

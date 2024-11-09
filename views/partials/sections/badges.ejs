@@ -1,0 +1,30 @@
+<div class="badges-section">
+    <h2 class="section-title">Succès Débloqués</h2>
+    <div class="badges-grid">
+        <% const badges = [
+            { id: 'beginner', name: 'Débutant', icon: '🌱', description: 'Commencez votre voyage', color: '#4CAF50' },
+            { id: 'warrior', name: 'Guerrier', icon: '⚔️', description: 'Force niveau 5', color: '#FF5722' },
+            { id: 'scholar', name: 'Érudit', icon: '📚', description: 'Connaissance niveau 5', color: '#2196F3' },
+            { id: 'athlete', name: 'Athlète', icon: '🏃', description: 'Santé niveau 5', color: '#FF9800' },
+            { id: 'artist', name: 'Artiste', icon: '🎨', description: 'Créativité niveau 5', color: '#E91E63' },
+            { id: 'monk', name: 'Moine', icon: '🧘', description: 'Discipline niveau 5', color: '#9C27B0' },
+            { id: 'leader', name: 'Leader', icon: '👥', description: 'Relations niveau 5', color: '#3F51B5' },
+            { id: 'merchant', name: 'Marchand', icon: '💰', description: 'Richesse niveau 5', color: '#009688' }
+        ]; %>
+        
+        <% badges.forEach(badge => { 
+            const isUnlocked = user.badges.find(b => b.id === badge.id);
+        %>
+            <div class="badge-item <%= isUnlocked ? 'unlocked' : 'locked' %>" 
+                 style="--badge-color: <%= badge.color %>">
+                <div class="badge-icon" style="color: <%= badge.color %>">
+                    <%= badge.icon %>
+                </div>
+                <div class="badge-name"><%= badge.name %></div>
+                <div class="badge-description">
+                    <%= isUnlocked ? `Débloqué le ${new Date(isUnlocked.unlockedAt).toLocaleDateString()}` : badge.description %>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+</div>
