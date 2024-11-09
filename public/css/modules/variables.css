@@ -1,28 +1,56 @@
+/* /public/css/modules/variables.css */
+
 :root {
-    /* Couleurs */
-    --primary-color: #4CAF50;
-    --primary-dark: #45a049;
-    --text-primary: #2c3e50;
-    --text-secondary: #666;
-    --background: #f5f7fa;
+    /* Couleurs principales */
+    --primary: #4CAF50;
+    --primary-dark: #388E3C;
+    --primary-light: #81C784;
     
-    /* Ombres */
-    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --hover-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    /* Couleurs secondaires */
+    --text-primary: #2C3E50;
+    --text-secondary: #666666;
+    --background: #F5F7FA;
+    --surface: #FFFFFF;
     
-    /* Transitions */
-    --transition-speed: 0.3s;
-    --transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+    /* États */
+    --success: #4CAF50;
+    --warning: #FFC107;
+    --error: #F44336;
+    --info: #2196F3;
     
     /* Espacements */
-    --spacing-xs: 0.5rem;
-    --spacing-sm: 1rem;
-    --spacing-md: 1.5rem;
-    --spacing-lg: 2rem;
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    
+    /* Ombres */
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+    --shadow-lg: 0 8px 16px rgba(0,0,0,0.1);
     
     /* Bordures */
-    --border-radius-sm: 8px;
-    --border-radius-md: 15px;
-    --border-radius-lg: 20px;
-    --border-radius-full: 9999px;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    
+    /* Transitions */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+    
+    /* z-index */
+    --z-nav: 100;
+    --z-modal: 1000;
+    --z-tooltip: 1500;
+    --z-toast: 2000;
 }
+
+/* Classes utilitaires */
+.text-primary { color: var(--primary); }
+.text-secondary { color: var(--text-secondary); }
+.bg-primary { background-color: var(--primary); }
+.shadow-sm { box-shadow: var(--shadow-sm); }
+.shadow-md { box-shadow: var(--shadow-md); }
+.shadow-lg { box-shadow: var(--shadow-lg); }

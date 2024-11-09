@@ -11,12 +11,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "body-parser": "^1.20.3",
     "ejs": "^3.1.10",
     "express": "^4.21.1",
     "express-fileupload": "^1.5.1",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.0",
-    "nodemon": "^3.1.7"
+    "nodemailer": "^6.9.16",
+    "nodemon": "^3.1.7",
+    "stripe": "^17.3.1"
   },
   "description": "Application de gamification de la vie quotidienne"
 }

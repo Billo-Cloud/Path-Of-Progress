@@ -370,6 +370,7 @@ app.post('/api/complete-quest', async (req, res) => {
 });
 
 // Route principale
+// Dans la route principale (app.get('/'))
 app.get('/', async (req, res) => {
     try {
         let user = await User.findOne();
@@ -407,8 +408,12 @@ app.get('/', async (req, res) => {
             }
         });
 
-        // Calculs pour l'historique
-        const totalQuests = await Quest.countDocuments();
+        // Calcul des statistiques des quêtes
+        const totalQuests = user.dailyQuests.length;
+        const completedQuests = user.dailyQuests.filter(quest => quest.completed).length;
+        const hasAnyQuests = totalQuests > 0;
+
+        // Calcul des autres statistiques...
         const lastWeek = new Date();
         lastWeek.setDate(lastWeek.getDate() - 7);
         
@@ -416,62 +421,50 @@ app.get('/', async (req, res) => {
             completedAt: { $gte: lastWeek }
         }).countDocuments();
 
-        const questsPreviousWeek = await Quest.find({
-            completedAt: {
-                $gte: new Date(lastWeek.getTime() - 7 * 24 * 60 * 60 * 1000),
-                $lt: lastWeek
-            }
-        }).countDocuments();
+        const weeklyGrowth = await calculateWeeklyGrowth();
 
-        // Calculer les statistiques supplémentaires
-        const completedQuests = await Quest.find({ completed: true }).countDocuments();
-        const completionRate = totalQuests > 0 ? Math.round((completedQuests / totalQuests) * 100) : 0;
-        
-        const previousCompletionRate = await calculatePreviousCompletionRate();
-        const completionTrend = completionRate - previousCompletionRate;
-
-        const totalXP = user.totalXP || 0;
-        const xpLastWeek = await calculateXPForPeriod(lastWeek);
-        const xpPreviousWeek = await calculateXPForPeriod(new Date(lastWeek.getTime() - 7 * 24 * 60 * 60 * 1000));
-        const xpGrowth = xpPreviousWeek > 0 ? Math.round(((xpLastWeek - xpPreviousWeek) / xpPreviousWeek) * 100) : 100;
-
-        // Récupérer l'historique des quêtes
-        const questHistory = await Quest.find({ completed: true })
-            .sort({ completedAt: -1 })
-            .limit(50)
-            .lean();
-
-        const currentStreak = await calculateCurrentStreak(user._id);
-        const weeklyGrowth = questsPreviousWeek === 0 ? 100 : 
-            Math.round((questsLastWeek - questsPreviousWeek) / questsPreviousWeek * 100);
-
-        const timeSlots = {
-            morning: '🌅 Matin (6h - 12h)',
-            afternoon: '☀️ Après-midi (12h - 18h)',
-            evening: '🌙 Soirée (18h - 00h)'
-        };
-
+        // Rendu de la page avec toutes les variables nécessaires
         res.render('index', { 
             user,
             stats,
             organizedQuests,
-            timeSlots,
             totalQuests,
+            completedQuests,
+            hasAnyQuests,
             weeklyGrowth,
-            completionRate,
-            completionTrend,
-            totalXP,
-            xpGrowth,
-            currentStreak,
-            questHistory,
-            formatDate,
-            formatDuration
+			formatDate,
+			formatDuration,
+			timeSlots: {
+                morning: '🌅 Matin (6h - 12h)',
+                afternoon: '☀️ Après-midi (12h - 18h)',
+                evening: '🌙 Soirée (18h - 00h)'
+            }
         });
     } catch (error) {
         console.error('Erreur:', error);
         res.status(500).send('Erreur serveur');
     }
 });
+
+// Fonction pour calculer la croissance hebdomadaire
+async function calculateWeeklyGrowth() {
+    const lastWeek = new Date();
+    lastWeek.setDate(lastWeek.getDate() - 7);
+    
+    const questsLastWeek = await Quest.find({
+        completedAt: { $gte: lastWeek }
+    }).countDocuments();
+
+    const questsPreviousWeek = await Quest.find({
+        completedAt: {
+            $gte: new Date(lastWeek.getTime() - 7 * 24 * 60 * 60 * 1000),
+            $lt: lastWeek
+        }
+    }).countDocuments();
+
+    return questsPreviousWeek === 0 ? 100 : 
+        Math.round((questsLastWeek - questsPreviousWeek) / questsPreviousWeek * 100);
+}
 
 // Fonctions auxiliaires
 async function calculatePreviousCompletionRate() {

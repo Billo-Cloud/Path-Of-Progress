@@ -5,10 +5,7 @@
 
         <!-- Filtres -->
         <div class="quest-filters">
-            <div class="search-bar">
-                <input type="text" id="quest-search" placeholder="Rechercher une quête...">
-            </div>
-            
+            <input type="text" placeholder="Rechercher une quête..." class="search-input">
             <div class="filter-group">
                 <select id="stat-filter">
                     <option value="">Toutes les statistiques</option>
@@ -16,14 +13,12 @@
                         <option value="<%= key %>"><%= stat.emoji %> <%= stat.label %></option>
                     <% }) %>
                 </select>
-
                 <select id="difficulty-filter">
                     <option value="">Toutes les difficultés</option>
                     <option value="facile">Facile</option>
                     <option value="moyen">Moyen</option>
                     <option value="difficile">Difficile</option>
                 </select>
-
                 <select id="status-filter">
                     <option value="">Tous les statuts</option>
                     <option value="pending">À faire</option>
@@ -33,92 +28,77 @@
         </div>
 
         <!-- Timeline et quêtes -->
-        <div class="quests-timeline-container">
+        <div class="quests-timeline-layout">
             <!-- Timeline -->
             <div class="timeline">
-                <div class="timeline-line"></div>
-                <% let totalQuests = user.dailyQuests.length;
-                   let completedQuests = user.dailyQuests.filter(q => q.completed).length; %>
-                <div class="timeline-progress" style="height: <%= (completedQuests/totalQuests) * 100 %>%"></div>
-                
-                <div class="timeline-markers">
-                    <div class="time-marker morning">🌅 Matin</div>
-                    <div class="time-marker afternoon">☀️ Après-midi</div>
-                    <div class="time-marker evening">🌙 Soir</div>
-                </div>
+                <div class="timeline-progress" style="height: <%= (completedQuests / totalQuests) * 100 %>%"></div>
             </div>
 
-            <!-- Liste des quêtes -->
-            <div class="quests-list">
-				<% if (user.dailyQuests && user.dailyQuests.length > 0) { %>
-					<% const activeQuests = user.dailyQuests.filter(quest => !quest.completed); %>
-					<% if (activeQuests.length > 0) { %>
-						<% activeQuests.forEach(quest => { %>
-							<div class="quest-card" 
-								data-id="<%= quest._id %>"
-								data-stat="<%= quest.stat %>"
-								data-difficulty="<%= quest.difficulty %>">
-                            
-                            <div class="quest-time-indicator"></div>
-                            
-                            <div class="quest-content">
-                                <div class="quest-header">
-                                    <span class="quest-emoji"><%= stats[quest.stat].emoji %></span>
-                                    <h3 class="quest-title"><%= quest.name %></h3>
-                                    <span class="quest-difficulty <%= quest.difficulty %>">
-                                        <%= quest.difficulty ? quest.difficulty.charAt(0).toUpperCase() + quest.difficulty.slice(1) : 'Difficulté non définie' %>
-                                    </span>
-                                </div>
-
-                                <div class="quest-info">
-                                    <span class="quest-type" style="color: <%= stats[quest.stat].color %>">
-                                        <%= stats[quest.stat].label %>
-                                    </span>
-                                    <span class="quest-reward">+<%= quest.xpReward %> XP</span>
-                                    
-                                    <% if (quest.streak > 1) { %>
-                                        <span class="quest-streak">
-                                            🔥 <%= quest.streak %> jours
-                                        </span>
-                                    <% } %>
-                                </div>
-
-                                <% if (quest.timer) { %>
-                                    <div class="quest-timer" data-duration="<%= quest.timer %>">
-                                        <span class="timer-icon">⏱️</span>
-                                        <span class="timer-display">00:00</span>
-                                    </div>
-                                <% } %>
-
-                                <div class="quest-actions">
-                                    <button class="complete-button <%= quest.completed ? 'completed' : '' %>"
-                                            <%= quest.completed ? 'disabled' : '' %>
-                                            onclick="completeQuest(this)">
-                                        <%= quest.completed ? '✓ Complété' : 'Compléter' %>
-                                    </button>
-                                    
-                                    <% if (quest.timer) { %>
-                                        <button class="timer-button" onclick="startQuestTimer(this)">
-                                            Démarrer
-                                        </button>
-                                    <% } %>
-                                </div>
-                            </div>
-                        </div>
-                    <% }) %>
-                <% } else { %>
-                    <div class="empty-state">
-                        <div class="empty-icon">🎯</div>
-                        <h3>Aucune quête disponible</h3>
-                        <p> Créez une nouvelle quête pour continuer votre progression !</p>
-                        <button onclick="switchTab('create-quest')" class="create-quest-btn">
-                            Créer une quête
-                        </button>
+            <!-- Grille des créneaux -->
+            <div class="time-slots-grid">
+                <!-- Créneau Matin -->
+                <div class="time-slot-column">
+                    <div class="time-slot-header">
+                        <span class="time-slot-icon">🌅</span>
+                        <h3>Matin</h3>
+                        <span class="time-slot-hours">6h - 12h</span>
                     </div>
-                <% } %>
-			<% } else { %>
-				<!-- État vide existant... -->
-			<% } %>
-		</div>	
+                    <div class="quests-list" data-slot="morning">
+                        <% const morningQuests = organizedQuests.morning || [] %>
+                        <% if (morningQuests.length > 0) { %>
+                            <% morningQuests.forEach(quest => { %>
+                                <%- include('../quest-card', { quest, stats }) %>
+                            <% }) %>
+                        <% } %>
+                    </div>
+                </div>
+
+                <!-- Créneau Après-midi -->
+                <div class="time-slot-column">
+                    <div class="time-slot-header">
+                        <span class="time-slot-icon">☀️</span>
+                        <h3>Après-midi</h3>
+                        <span class="time-slot-hours">12h - 18h</span>
+                    </div>
+                    <div class="quests-list" data-slot="afternoon">
+                        <% const afternoonQuests = organizedQuests.afternoon || [] %>
+                        <% if (afternoonQuests.length > 0) { %>
+                            <% afternoonQuests.forEach(quest => { %>
+                                <%- include('../quest-card', { quest, stats }) %>
+                            <% }) %>
+                        <% } %>
+                    </div>
+                </div>
+
+                <!-- Créneau Soir -->
+                <div class="time-slot-column">
+                    <div class="time-slot-header">
+                        <span class="time-slot-icon">🌙</span>
+                        <h3>Soir</h3>
+                        <span class="time-slot-hours">18h - 00h</span>
+                    </div>
+                    <div class="quests-list" data-slot="evening">
+                        <% const eveningQuests = organizedQuests.evening || [] %>
+                        <% if (eveningQuests.length > 0) { %>
+                            <% eveningQuests.forEach(quest => { %>
+                                <%- include('../quest-card', { quest, stats }) %>
+                            <% }) %>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- État vide -->
+        <% if (!hasAnyQuests) { %>
+        <div class="empty-state">
+            <div class="empty-icon">🎯</div>
+            <h3>Aucune quête disponible</h3>
+            <p>Créez une nouvelle quête pour continuer votre progression !</p>
+            <button onclick="switchTab('create-quest')" class="create-quest-btn">
+                Créer une quête
+            </button>
+        </div>
+        <% } %>
     </div>
 </section>
